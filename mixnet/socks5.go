@@ -136,6 +136,10 @@ func dialSocks(ctx context.Context, proxy, host string, port int, timeout time.D
 	d := net.Dialer{Timeout: 10 * time.Second}
 	conn, err := d.DialContext(ctx, "tcp", proxy)
 	if err != nil {
+		if ctx.Err() != nil {
+			// The caller gave up (client hung up, deadline): not a missing proxy.
+			return nil, ctx.Err()
+		}
 		return nil, fmt.Errorf("%w (%s: %v)", ErrProxyUnreachable, proxy, err)
 	}
 	deadline := time.Now().Add(timeout)
