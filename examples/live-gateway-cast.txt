@@ -1,0 +1,3 @@
+12:31:15 ethmix gateway on http://127.0.0.1:8545  (default chain ethereum; SOCKS5 127.0.0.1:1080)
+12:31:33 ethereum eth_blockNumber -> mixnet -> ethereum-rpc.publicnode.com in 13.1s
+12:31:52 base eth_getBalance -> mixnet -> base-rpc.publicnode.com in 19.4s

@@ -1,0 +1,2 @@
+[  13.57s] rpc  ethereum-rpc.publicnode.com answered in 13.57s (139 bytes)
+ethmix: RPC error -32600: reading transaction object failed - rawTx: 0xdeadbeefdeadbeefdeadbeefdeadbeef

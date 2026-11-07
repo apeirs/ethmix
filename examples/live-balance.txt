@@ -1,0 +1,5 @@
+[   6.43s] dns  ethereum-rpc.publicnode.com -> [104.20.24.117 172.66.150.162] (DoH via 1.1.1.1, over the mixnet, 6.43s)
+[   6.43s] dial ethereum-rpc.publicnode.com:443 -> socks5 127.0.0.1:1080 -> mixnet -> exit -> 172.66.150.162:443
+[   6.43s] open ethereum-rpc.publicnode.com:443 socks5 CONNECT accepted by the local mixnet client in 0.00s
+[  10.52s] rpc  ethereum-rpc.publicnode.com answered in 10.52s (55 bytes)
+0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045  5.769725330718854341 ETH  (5769725330718854341 wei, via ethereum-rpc.publicnode.com over the mixnet)

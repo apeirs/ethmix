@@ -1,0 +1,13 @@
+[   5.15s] dns  ethereum-rpc.publicnode.com -> [104.20.24.117 172.66.150.162] (DoH via 1.1.1.1, over the mixnet, 5.15s)
+[   5.15s] dial ethereum-rpc.publicnode.com:443 -> socks5 127.0.0.1:1080 -> mixnet -> exit -> 104.20.24.117:443
+[   5.15s] open ethereum-rpc.publicnode.com:443 socks5 CONNECT accepted by the local mixnet client in 0.00s
+[ 120.06s] rpc  ethereum-rpc.publicnode.com failed after 120.06s: Post "https://ethereum-rpc.publicnode.com": context deadline exceeded
+[ 123.48s] dns  eth.llamarpc.com -> [104.21.67.22 172.67.167.200] (DoH via 1.1.1.1, over the mixnet, 3.42s)
+[ 123.48s] dial eth.llamarpc.com:443 -> socks5 127.0.0.1:1080 -> mixnet -> exit -> 104.21.67.22:443
+[ 123.48s] open eth.llamarpc.com:443 socks5 CONNECT accepted by the local mixnet client in 0.00s
+[ 138.29s] rpc  eth.llamarpc.com failed after 18.23s: HTTP 525: {"type":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-525/","
+[ 143.26s] dns  cloudflare-eth.com -> [104.18.11.112 104.18.10.112] (DoH via 1.1.1.1, over the mixnet, 4.97s)
+[ 143.26s] dial cloudflare-eth.com:443 -> socks5 127.0.0.1:1080 -> mixnet -> exit -> 104.18.10.112:443
+[ 143.26s] open cloudflare-eth.com:443 socks5 CONNECT accepted by the local mixnet client in 0.00s
+[ 148.55s] rpc  cloudflare-eth.com answered in 10.26s (75 bytes)
+ethmix: RPC error -32603: Internal error

@@ -1,0 +1,4 @@
+$ cast block-number --rpc-url http://127.0.0.1:8545/ethereum
+26211691
+$ cast balance 0xd8dA...6045 --ether --rpc-url http://127.0.0.1:8545/base
+3.128821803472737280

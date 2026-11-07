@@ -1,0 +1,22 @@
+# Re-test 2026-11-07, real Nym mainnet mixnet, nym-socks5-client (build 2026-10-01), exit node 1995 (HK)
+
+$ ethmix ip
+https://api.ipify.org sees this request coming from 103.75.117.191 (4.09s over the mixnet)
+= Nym node 1995 (HK, exit gateway: true) in the nym-api node list
+
+$ ethmix block --chain base
+block 54216567  0x97958b7d…c5391c  1s old (via base-rpc.publicnode.com over the mixnet)
+
+$ ethmix serve   # then eth_blockNumber/eth_getBalance via curl to http://127.0.0.1:8545/<chain>
+07:41:38 ethmix gateway on http://127.0.0.1:8545  (default chain ethereum; SOCKS5 127.0.0.1:1080)
+07:41:48 ethereum eth_blockNumber -> mixnet -> ethereum-rpc.publicnode.com in 7.4s
+07:41:52 base eth_blockNumber -> mixnet -> base-rpc.publicnode.com in 4.0s
+07:41:58 arbitrum eth_blockNumber -> mixnet -> arbitrum-one-rpc.publicnode.com in 5.6s
+07:41:59 ethereum eth_getBalance -> mixnet -> ethereum-rpc.publicnode.com in 0.8s
+
+$ curl -H "Host: evil.example" ... -> 403 bad Host header
+
+$ ethmix probe --chain base
+CHAIN  UPSTREAM                 RESULT          TIME
+base   base-rpc.publicnode.com  block 54216743  5.5s
+base  mainnet.base.org  block 54216765  4.1s
