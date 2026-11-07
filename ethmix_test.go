@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -161,5 +162,50 @@ func TestBuiltinChains(t *testing.T) {
 		if !ok || len(c.URLs) == 0 || c.ChainID == 0 {
 			t.Errorf("chain %s", n)
 		}
+	}
+}
+
+// The upstream is a real, directly reachable TLS server on localhost. With
+// the mixnet client down, nothing may reach it, in either DNS mode and at any
+// layer (gateway or CLI client): a direct dial would land here and be counted.
+func TestNoFallbackEvenWhenDirectWouldWork(t *testing.T) {
+	ca := fakes.NewCA()
+	var mu sync.Mutex
+	hits := 0
+	ln, err := tls.Listen("tcp", "127.0.0.1:0", &tls.Config{Certificates: []tls.Certificate{ca.Leaf("localhost", "127.0.0.1")}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	srv := &http.Server{Handler: http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		mu.Lock()
+		hits++
+		mu.Unlock()
+		io.WriteString(rw, `{"jsonrpc":"2.0","id":1,"result":"0x1"}`)
+	})}
+	go srv.Serve(ln)
+	defer srv.Close()
+	// Nothing listens on this port at all (a listener that doesn't speak
+	// SOCKS would test a different failure).
+	dl, _ := net.Listen("tcp", "127.0.0.1:0")
+	dead := dl.Addr().String()
+	dl.Close()
+	_, port, _ := net.SplitHostPort(ln.Addr().String())
+	ups := []string{"https://localhost:" + port, "https://127.0.0.1:" + port}
+	for _, mode := range []string{mixnet.DNSDoH, mixnet.DNSExit} {
+		cl := &rpc.Client{D: &mixnet.Dialer{Proxy: dead, DNS: mode, RootCAs: ca.Pool, Timeout: time.Second}, Timeout: 3 * time.Second}
+		gw := httptest.NewServer(&gateway.Gateway{Client: cl, Default: "net", Custom: map[string][]string{"net": ups}})
+		resp, body := post(t, gw.URL, "", `{"jsonrpc":"2.0","id":1,"method":"eth_chainId"}`)
+		gw.Close()
+		if resp.StatusCode != 502 || !strings.Contains(body, "mixnet") {
+			t.Errorf("dns=%s: want 502 mixnet error, got %d %s", mode, resp.StatusCode, body)
+		}
+		if _, _, err := cl.Call(context.Background(), ups, "eth_chainId", nil); err == nil {
+			t.Errorf("dns=%s: CLI path answered without the mixnet", mode)
+		}
+	}
+	mu.Lock()
+	defer mu.Unlock()
+	if hits != 0 {
+		t.Fatalf("the upstream was reached directly %d times", hits)
 	}
 }
